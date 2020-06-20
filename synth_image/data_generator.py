@@ -87,12 +87,7 @@ class FakeTextDataGenerator(object):
     ##########################
         # Create picture of text #
         ##########################
-
-        text_list = []
-        text_list.append(text)
-        text_list.append(text+"abcd")
-        text_list.append(text+"89898")
-
+        text_list = text.split("#_#")
         for text_index, text in enumerate(text_list):
             image, mask = computer_text_generator.generate(
                 text,
@@ -143,18 +138,14 @@ class FakeTextDataGenerator(object):
             ##################################
 
             # Horizontal text
-            if orientation == 0:
-                new_width = int(
-                    distorted_img.size[0]
-                    * (float(size) / float(distorted_img.size[1]))
-                )
-                resized_img = distorted_img.resize(
-                    (new_width, size), Image.ANTIALIAS
-                )
-                resized_mask = distorted_mask.resize((new_width, size), Image.NEAREST)
-            # Vertical text
-            else:
-                raise ValueError("Invalid orientation")
+            new_width = int(
+                distorted_img.size[0]
+                * (float(size) / float(distorted_img.size[1]))
+            )
+            resized_img = distorted_img.resize(
+                (new_width, size), Image.ANTIALIAS
+            )
+
 
 
             #############################
@@ -162,10 +153,9 @@ class FakeTextDataGenerator(object):
             #############################
 
             new_text_width, _ = resized_img.size
-            print('alignment: ', alignment)
 
             background_img.paste(resized_img, (100, text_index * 50), resized_img)
-            background_mask.paste(resized_mask, (100, text_index * 50))
+            # background_mask.paste(resized_mask, (100, text_index * 50))
 
 
             ##################################
@@ -176,31 +166,19 @@ class FakeTextDataGenerator(object):
                 radius=blur if not random_blur else rnd.randint(0, blur)
             )
             final_image = background_img.filter(gaussian_filter)
-            final_mask = background_mask.filter(gaussian_filter)
+            # final_mask = background_mask.filter(gaussian_filter)
 
-            #####################################
-            # Generate name for resulting image #
-            #####################################
-            if name_format == 0:
-                image_name = "{}_{}.{}".format(text, str(index), extension)
-                mask_name = "{}_{}_mask.png".format(text, str(index))
-            elif name_format == 1:
-                image_name = "{}_{}.{}".format(str(index), text, extension)
-                mask_name = "{}_{}_mask.png".format(str(index), text)
-            elif name_format == 2:
-                image_name = "{}.{}".format(str(index), extension)
-                mask_name = "{}_mask.png".format(str(index))
-            else:
-                print("{} is not a valid name format. Using default.".format(name_format))
-                image_name = "{}_{}.{}".format(text, str(index), extension)
-                mask_name = "{}_{}_mask.png".format(text, str(index))
 
-            # Save the image
-        if out_dir is not None:
-            final_image.convert("RGB").save(os.path.join(out_dir, image_name))
-            if output_mask == 1:
-                final_mask.convert("RGB").save(os.path.join(out_dir, mask_name))
-        else:
-            if output_mask == 1:
-                return final_image.convert("RGB"), final_mask.convert("RGB")
-            return final_image.convert("RGB")
+
+        #####################################
+        # Generate name for resulting image #
+        #####################################
+
+        image_name = "{}.{}".format(str(index), extension)
+        mask_name = "{}_mask.png".format(str(index))
+
+        # Save the image
+        final_image.convert("RGB").save(os.path.join(out_dir, image_name))
+        # if output_mask == 1:
+        #     final_mask.convert("RGB").save(os.path.join(out_dir, mask_name))
+

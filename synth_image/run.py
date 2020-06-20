@@ -18,6 +18,7 @@ from synth_image.string_generator import (
 from synth_image.utils import load_dict, load_fonts
 from synth_image.data_generator import FakeTextDataGenerator
 from multiprocessing import Pool
+from synth_image.text_generator import TextGenerator
 
 
 def margins(margin):
@@ -61,6 +62,14 @@ def parse_arguments():
         nargs="?",
         help="The number of images to be created.",
         required=True,
+    )
+    parser.add_argument(
+        "-lc",
+        "--line_count",
+        type=int,
+        default=10,
+        nargs="?",
+        help="The number of line count in one image."
     )
     parser.add_argument(
         "-rs",
@@ -348,49 +357,9 @@ def main():
         fonts = load_fonts(args.language)
 
     # Creating synthetic sentences (or word)
-    strings = []
-
-    if args.use_wikipedia:
-        strings = create_strings_from_wikipedia(args.length, args.count, args.language)
-    elif args.input_file != "":
-        strings = create_strings_from_file(args.input_file, args.count)
-    elif args.random_sequences:
-        strings = create_strings_randomly(
-            args.length,
-            args.random,
-            args.count,
-            args.include_letters,
-            args.include_numbers,
-            args.include_symbols,
-            args.language,
-        )
-        # Set a name format compatible with special characters automatically if they are used
-        if args.include_symbols or True not in (
-            args.include_letters,
-            args.include_numbers,
-            args.include_symbols,
-        ):
-            args.name_format = 2
-    else:
-        strings = create_strings_from_dict(
-            args.length, args.random, args.count, lang_dict
-        )
-
-    if args.language == "ar":
-        from arabic_reshaper import ArabicReshaper
-
-        arabic_reshaper = ArabicReshaper()
-        strings = [
-            " ".join([arabic_reshaper.reshape(w) for w in s.split(" ")[::-1]])
-            for s in strings
-        ]
-    if args.case == "upper":
-        strings = [x.upper() for x in strings]
-    if args.case == "lower":
-        strings = [x.lower() for x in strings]
-
+    text_generator = TextGenerator(args.input_file)
+    strings = text_generator.create_text_list(args.count, args.line_count)
     string_count = len(strings)
-    print('strings', strings)
 
     p = Pool(args.thread_count)
     for _ in tqdm(
