@@ -37,7 +37,7 @@ def parse_arguments():
         description="Generate synthetic text data for text recognition."
     )
     parser.add_argument(
-        "--output_dir", type=str, nargs="?", help="The output directory", default="out/"
+        "--output_dir", type=str, nargs="?", help="The output directory", default="output/"
     )
     parser.add_argument(
         "-i",
@@ -120,7 +120,7 @@ def parse_arguments():
         type=int,
         nargs="?",
         help="Define the height of the produced images if horizontal, else the width",
-        default=22,
+        default=28,
     )
     parser.add_argument(
         "-t",
@@ -326,6 +326,8 @@ def main():
     # Create the directory if it does not exist.
     try:
         os.makedirs(args.output_dir)
+        os.makedirs(os.path.join(args.output_dir, 'labels'))
+        os.makedirs(os.path.join(args.output_dir, 'images'))
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise

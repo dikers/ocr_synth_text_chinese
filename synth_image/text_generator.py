@@ -1,3 +1,4 @@
+import random
 class TextGenerator:
     def __init__(self, text_file):
 
@@ -11,7 +12,7 @@ class TextGenerator:
 
     def _next_string(self):
         temp = self.lines[self.line_index].replace("\n", '')
-        self.line_index += 1
+        self.line_index += random.randint(1, 3)
 
         if (self.line_index >= self.line_total):
             self.line_index = 0

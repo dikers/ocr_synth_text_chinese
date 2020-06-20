@@ -14,6 +14,7 @@ def generate(
     fit,
     word_split,
 ):
+
     if orientation == 0:
         return _generate_horizontal_text(
             text,
