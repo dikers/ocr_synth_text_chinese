@@ -29,6 +29,7 @@ __pycache__/
 /models/
 */models
 
+*/output/*
 */output/
 */out/
 /target/

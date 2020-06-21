@@ -59,8 +59,9 @@ def generate_char_map(lines, output_dir):
     :return:
     """
     char_map_json_file = os.path.join(output_dir, 'char_map.json')
-    char_set = set(''.join(lines))
 
+    char_set = set(''.join(lines))
+    char_set.remove('\n')
     single_char_map = {}
     index = 0
     for char in char_set:
@@ -97,6 +98,12 @@ def generate_char_map(lines, output_dir):
 
     print('【输出】生成 Char dict 文件  输出路径{}, 文件行数 {}.'.format(char_map_json_file, len(char_map)))
     print('【输出】生成 Ord  map  文件  输出路径{}, 文件行数 {}.'.format(ord_map_json_file, len(ord_map)))
+
+
+    char_line = ''.join(char_set)
+    text_set_json_file = os.path.join(output_dir, 'text_set.json')
+    with open(text_set_json_file, 'w', encoding='utf-8') as f:
+        f.write(char_line)
 
 
 def combined_line(output_dir,
