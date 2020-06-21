@@ -4,7 +4,7 @@ import random
 
 from PIL import Image, ImageFilter
 
-from trdg import computer_text_generator, background_generator, distorsion_generator
+from synth_image import computer_text_generator, background_generator, distorsion_generator
 
 BACKGROUND_WIDTH = 1280
 BACKGROUND_HEIGHT = 720
@@ -170,12 +170,11 @@ class FakeTextDataGenerator(object):
             text_left, text_top = cls.generate_position(last_text_right, last_text_top,
                                                         text_width, text_height)
 
-            label_lines += cls.generate_label(text_left, text_top, text_width, text_height, text)+'\n'
-
             if text_left <= 0:
                 # print("[warning]  text too large ")
                 break
-
+                
+            label_lines += cls.generate_label(text_left, text_top, text_width, text_height, text)+'\n'
             background_img.paste(resized_img, (text_left, text_top), resized_img)
             last_text_right = text_left + text_width
             last_text_top = text_top
@@ -184,12 +183,12 @@ class FakeTextDataGenerator(object):
         #####################################
         # Generate name for resulting image #
         #####################################
-        image_name = "{}.{}".format(str(index), extension)
-        label_name = "{}.{}".format(str(index), 'txt')
+        image_name = "img_{}.{}".format(str(index), extension)
+        label_name = "gt_img_{}.{}".format(str(index), 'txt')
         # Save the image
 
-        images_dir = os.path.join(out_dir, 'images')
-        labels_dir = os.path.join(out_dir, 'labels')
+        images_dir = os.path.join(out_dir, 'ch4_training_images')
+        labels_dir = os.path.join(out_dir, 'ch4_training_localization_transcription_gt')
 
         with open(os.path.join(labels_dir, label_name), "w", encoding='utf-8') as f:
             f.write(label_lines)

@@ -326,8 +326,8 @@ def main():
     # Create the directory if it does not exist.
     try:
         os.makedirs(args.output_dir)
-        os.makedirs(os.path.join(args.output_dir, 'labels'))
-        os.makedirs(os.path.join(args.output_dir, 'images'))
+        os.makedirs(os.path.join(args.output_dir, 'ch4_training_localization_transcription_gt'))
+        os.makedirs(os.path.join(args.output_dir, 'ch4_training_images'))
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
