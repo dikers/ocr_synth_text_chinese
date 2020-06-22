@@ -212,7 +212,7 @@ class FakeTextDataGenerator(object):
 
         if left + text_width > BACKGROUND_WIDTH:
             left = rnd.randint(20, 40)
-            top = last_text_top + text_height + rnd.randint(15, 30)
+            top = last_text_top + text_height + rnd.randint(20, 35)
         else:
             top = last_text_top
 
