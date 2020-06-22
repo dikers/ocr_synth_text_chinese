@@ -9,7 +9,7 @@ from synth_image import computer_text_generator, background_generator, distorsio
 BACKGROUND_WIDTH = 1280
 BACKGROUND_HEIGHT = 720
 
-DEBUG_FLAG = True
+DEBUG_FLAG = False
 
 class FakeTextDataGenerator(object):
     @classmethod
@@ -96,18 +96,19 @@ class FakeTextDataGenerator(object):
         label_lines = ''
         for text_index, text in enumerate(text_list):
             text.replace(',', '，')
-            size += rnd.randint(1, 4)
+            _size = size + rnd.randint(0, 7)
             image, mask = computer_text_generator.generate(
                 text,
                 font,
                 text_color,
-                size,
+                _size,
                 orientation,
                 space_width,
                 character_spacing,
                 fit,
                 word_split,
             )
+
             random_angle = rnd.randint(0 - skewing_angle, skewing_angle)
             rotated_img = image.rotate(skewing_angle if not random_skew else random_angle, expand=1)
             rotated_mask = mask.rotate(skewing_angle if not random_skew else random_angle, expand=1)
@@ -150,10 +151,10 @@ class FakeTextDataGenerator(object):
             # Horizontal text
             new_width = int(
                 distorted_img.size[0]
-                * (float(size) / float(distorted_img.size[1]))
+                * (float(_size) / float(distorted_img.size[1]))
             )
             resized_img = distorted_img.resize(
-                (new_width, size), Image.ANTIALIAS
+                (new_width, _size), Image.ANTIALIAS
             )
 
             #############################
@@ -210,7 +211,7 @@ class FakeTextDataGenerator(object):
         left = last_text_right + rnd.randint(50, 100)
 
         if left + text_width > BACKGROUND_WIDTH:
-            left = 10 + rnd.randint(5, 20)
+            left = rnd.randint(20, 40)
             top = last_text_top + text_height + rnd.randint(15, 30)
         else:
             top = last_text_top
@@ -241,7 +242,7 @@ class FakeTextDataGenerator(object):
                                                    text)
 
         if DEBUG_FLAG:
-            draw =ImageDraw.Draw(background_img)
+            draw = ImageDraw.Draw(background_img)
             draw.line((x_1, y_1, x_2, y_2), 'cyan')
             draw.line((x_2, y_2, x_3, y_3), 'cyan')
             draw.line((x_3, y_3, x_4, y_4), 'cyan')

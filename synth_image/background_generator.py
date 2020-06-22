@@ -105,7 +105,7 @@ def _draw_line(draw_image, height, width):
     for index in range(20):
         left = rnd.randint(10, 80)
         right = width - rnd.randint(10, 80)
-        top = top + rnd.randint(30, 150)
+        top = top + rnd.randint(40, 150)
         if top > height:
             break
         cv2.line(draw_image, (left, top), (right, top), (0, 255, 0), 1)
@@ -114,7 +114,7 @@ def _draw_line(draw_image, height, width):
     left = rnd.randint(10, 80)
 
     for index in range(20):
-        left = left + rnd.randint(50, 250)
+        left = left + rnd.randint(60, 250)
         top = rnd.randint(10, 80)
         bottom = height - rnd.randint(10, 80)
         if left > width:

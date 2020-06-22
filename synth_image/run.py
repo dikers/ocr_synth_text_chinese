@@ -144,14 +144,14 @@ def parse_arguments():
         type=int,
         nargs="?",
         help="Define skewing angle of the generated text. In positive degrees",
-        default=0,
+        default=1,
     )
     parser.add_argument(
         "-rk",
         "--random_skew",
         action="store_true",
         help="When set, the skew angle will be randomized between the value set with -k and it's opposite",
-        default=False,
+        default=True,
     )
     parser.add_argument(
         "-wk",
