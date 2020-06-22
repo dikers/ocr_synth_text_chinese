@@ -18,7 +18,7 @@ fi
 
 export PYTHONPATH=./
 echo "start --------- segment  string -- "
-python3 ./split_text/segment_string.py -mi 2 -ma 20 -i $1 --output_dir ${BASE_DIR}
+python3 ./split_text/segment_string.py -mi 2 -ma 15 -i $1 --output_dir ${BASE_DIR}
 
 
 TOTAL_COUNT=$(wc -l ${BASE_DIR}'text_split.txt' | awk '{print $1}')

@@ -3,6 +3,7 @@ import math
 import os
 import random as rnd
 import numpy as np
+import time
 
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -16,7 +17,9 @@ def gaussian_noise(height, width):
     image = np.ones((height, width)) * 255
 
     # We add gaussian noise
-    cv2.randn(image, 235, 10)
+    cv2.randn(image, 235, 8 + rnd.randint(1, 10))
+
+    _draw_line(image, height, width)
 
     return Image.fromarray(image).convert("RGBA")
 
@@ -25,8 +28,10 @@ def plain_white(height, width):
     """
         Create a plain white background
     """
+    image = np.ones((height, width)) * 255
+    _draw_line(image, height, width)
 
-    return Image.new("L", (width, height), 255).convert("RGBA")
+    return Image.fromarray(image).convert("RGBA")
 
 
 def quasicrystal(height, width):
@@ -87,3 +92,31 @@ def image(height, width, image_dir):
         return pic.crop((x, y, x + width, y + height))
     else:
         raise Exception("No images where found in the images folder!")
+
+
+def _draw_line(draw_image, height, width):
+    rnd.seed(time.time())
+    rand_seed = rnd.randint(0, 3)
+    if rand_seed % 2 == 1:
+        return
+    print("--------------------")
+
+    top = rnd.randint(10, 20)
+    for index in range(20):
+        left = rnd.randint(10, 80)
+        right = width - rnd.randint(10, 80)
+        top = top + rnd.randint(30, 150)
+        if top > height:
+            break
+        cv2.line(draw_image, (left, top), (right, top), (0, 255, 0), 1)
+
+
+    left = rnd.randint(10, 80)
+
+    for index in range(20):
+        left = left + rnd.randint(50, 250)
+        top = rnd.randint(10, 80)
+        bottom = height - rnd.randint(10, 80)
+        if left > width:
+            break
+        cv2.line(draw_image, (left, top), (left, bottom), (0, 255, 0), 1)

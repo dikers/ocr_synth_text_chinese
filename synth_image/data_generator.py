@@ -1,15 +1,15 @@
 import os
 import random as rnd
-import random
+import time
 
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageDraw
 
 from synth_image import computer_text_generator, background_generator, distorsion_generator
 
 BACKGROUND_WIDTH = 1280
 BACKGROUND_HEIGHT = 720
 
-
+DEBUG_FLAG = True
 
 class FakeTextDataGenerator(object):
     @classmethod
@@ -54,6 +54,7 @@ class FakeTextDataGenerator(object):
 
         image_dir,
     ):
+        rnd.seed(time.time())
         margin_top, margin_left, margin_bottom, margin_right = margins
         horizontal_margin = margin_left + margin_right
 
@@ -64,7 +65,7 @@ class FakeTextDataGenerator(object):
         # Generate background image #
         #############################
 
-        background_type = random.randint(0, 1)
+        background_type = rnd.randint(0, 1)
         if background_type == 0:
             background_img = background_generator.gaussian_noise(
                 background_height, background_width
@@ -95,6 +96,7 @@ class FakeTextDataGenerator(object):
         label_lines = ''
         for text_index, text in enumerate(text_list):
             text.replace(',', '，')
+            size += rnd.randint(1, 4)
             image, mask = computer_text_generator.generate(
                 text,
                 font,
@@ -114,7 +116,7 @@ class FakeTextDataGenerator(object):
             #############################
             # Apply distorsion to image #
             #############################
-            distorsion_type = random.randint(0, 2)
+            distorsion_type = rnd.randint(0, 2)
 
             if distorsion_type == 0:
                 distorted_img = rotated_img  # Mind = blown
@@ -174,10 +176,15 @@ class FakeTextDataGenerator(object):
                 # print("[warning]  text too large ")
                 break
                 
-            label_lines += cls.generate_label(text_left, text_top, text_width, text_height, text)+'\n'
+            label_lines += cls.generate_label(text_left, text_top, text_width, text_height, text, background_img)
             background_img.paste(resized_img, (text_left, text_top), resized_img)
             last_text_right = text_left + text_width
             last_text_top = text_top
+
+
+
+            # cv2.line(background_img, (100, 300), (800, 300), (0, 255, 0), 1)
+            # background_img.line((0,0, 100,  100), fill=128)
 
 
         #####################################
@@ -200,11 +207,11 @@ class FakeTextDataGenerator(object):
     @classmethod
     def generate_position(cls, last_text_right, last_text_top,
                           text_width, text_height):
-        left = last_text_right + random.randint(50, 100)
+        left = last_text_right + rnd.randint(50, 100)
 
         if left + text_width > BACKGROUND_WIDTH:
-            left = 10 + random.randint(5, 20)
-            top = last_text_top + text_height + random.randint(10, 30)
+            left = 10 + rnd.randint(5, 20)
+            top = last_text_top + text_height + rnd.randint(15, 30)
         else:
             top = last_text_top
 
@@ -214,7 +221,7 @@ class FakeTextDataGenerator(object):
         return left, top
 
     @classmethod
-    def generate_label(cls, left, top, text_width, text_height, text):
+    def generate_label(cls, left, top, text_width, text_height, text, background_img):
         # 顺时针 从left_top 开始
         x_1 = left
         y_1 = top
@@ -227,9 +234,18 @@ class FakeTextDataGenerator(object):
 
         x_4 = left
         y_4 = top + text_height
-        line = '{},{},{},{},{},{},{},{},{}'.format(x_1, y_1,
+        line = '{},{},{},{},{},{},{},{},{}\n'.format(x_1, y_1,
                                                    x_2, y_2,
                                                    x_3, y_3,
                                                    x_4, y_4,
                                                    text)
+
+        if DEBUG_FLAG:
+            draw =ImageDraw.Draw(background_img)
+            draw.line((x_1, y_1, x_2, y_2), 'cyan')
+            draw.line((x_2, y_2, x_3, y_3), 'cyan')
+            draw.line((x_3, y_3, x_4, y_4), 'cyan')
+            draw.line((x_4, y_4, x_1, y_1), 'cyan')
+
         return line
+

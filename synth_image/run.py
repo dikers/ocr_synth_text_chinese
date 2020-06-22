@@ -120,7 +120,7 @@ def parse_arguments():
         type=int,
         nargs="?",
         help="Define the height of the produced images if horizontal, else the width",
-        default=28,
+        default=26,
     )
     parser.add_argument(
         "-t",
