@@ -26,7 +26,7 @@ sh split_text/split_text.sh split_text/sample_data/test.txt
 
 ```shell script
 python3 synth_image/run.py -c 3 --font_dir synth_image/fonts/cn -i dataset/text_split.txt -lc 50
-python3 synth_image/run.py -c 3 --font 'synth_image/fonts/cn/仿宋_GB2312.ttf' -i dataset/text_split.txt -lc 50
+python3 synth_image/run.py -c 3 --font 'synth_image/fonts/cn/仿宋_GB2312.ttf' -i dataset/text_split.txt -lc 50 --output_dir ~/datasets/
 
 
 #  -c               生成数据的数量
