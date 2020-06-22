@@ -99,7 +99,6 @@ def _draw_line(draw_image, height, width):
     rand_seed = rnd.randint(0, 3)
     if rand_seed % 2 == 1:
         return
-    print("--------------------")
 
     top = rnd.randint(10, 20)
     for index in range(20):
