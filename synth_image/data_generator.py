@@ -161,10 +161,17 @@ class FakeTextDataGenerator(object):
             # Place text with alignment #
             #############################
 
+            # gaussian_filter = ImageFilter.GaussianBlur(
+            #     radius=blur if not random_blur else rnd.randint(0, blur)
+            # )
             gaussian_filter = ImageFilter.GaussianBlur(
-                radius=blur if not random_blur else rnd.randint(0, blur)
+                radius=3
             )
-            resized_img = resized_img.filter(gaussian_filter)
+
+            blur_filter = False
+            if rnd.randint(0, 9) % 3 == 1:
+                blur_filter = True
+                resized_img = resized_img.filter(gaussian_filter)
 
 
 
@@ -177,7 +184,7 @@ class FakeTextDataGenerator(object):
                 # print("[warning]  text too large ")
                 break
                 
-            label_lines += cls.generate_label(text_left, text_top, text_width, text_height, text, background_img)
+            label_lines += cls.generate_label(text_left, text_top, text_width, text_height, text, background_img, blur_filter)
             background_img.paste(resized_img, (text_left, text_top), resized_img)
             last_text_right = text_left + text_width
             last_text_top = text_top
@@ -222,7 +229,7 @@ class FakeTextDataGenerator(object):
         return left, top
 
     @classmethod
-    def generate_label(cls, left, top, text_width, text_height, text, background_img):
+    def generate_label(cls, left, top, text_width, text_height, text, background_img, blur_filter):
         # 顺时针 从left_top 开始
         x_1 = left
         y_1 = top
@@ -235,6 +242,10 @@ class FakeTextDataGenerator(object):
 
         x_4 = left
         y_4 = top + text_height
+
+        if blur_filter:
+            text = '###'
+
         line = '{},{},{},{},{},{},{},{},{}\n'.format(x_1, y_1,
                                                    x_2, y_2,
                                                    x_3, y_3,
