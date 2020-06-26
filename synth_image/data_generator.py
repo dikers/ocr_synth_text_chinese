@@ -198,8 +198,8 @@ class FakeTextDataGenerator(object):
         #####################################
         # Generate name for resulting image #
         #####################################
-        image_name = "img_{}.{}".format(str(index), extension)
-        label_name = "gt_img_{}.{}".format(str(index), 'txt')
+        image_name = "img_{}.{}".format(str(index+1000), extension)
+        label_name = "gt_img_{}.{}".format(str(index+1000), 'txt')
         # Save the image
 
         images_dir = os.path.join(out_dir, 'ch4_training_images')
