@@ -209,11 +209,12 @@ class FakeTextDataGenerator(object):
 
         images_dir = os.path.join(out_dir, 'ch4_training_images')
         labels_dir = os.path.join(out_dir, 'ch4_training_localization_transcription_gt')
+        label_ctpn_dir = os.path.join(out_dir, 'ch4_training_ctpn_label')
 
         with open(os.path.join(labels_dir, label_name), "w", encoding='utf-8') as f:
             f.write(label_lines)
 
-        with open(os.path.join(images_dir, label_ctpn_name), "w", encoding='utf-8') as f:
+        with open(os.path.join(label_ctpn_dir, label_ctpn_name), "w", encoding='utf-8') as f:
             f.write(label_ctpn_lines)
 
 

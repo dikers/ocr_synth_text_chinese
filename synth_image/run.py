@@ -328,6 +328,7 @@ def main():
         os.makedirs(args.output_dir)
         os.makedirs(os.path.join(args.output_dir, 'ch4_training_localization_transcription_gt'))
         os.makedirs(os.path.join(args.output_dir, 'ch4_training_images'))
+        os.makedirs(os.path.join(args.output_dir, 'ch4_training_ctpn_label'))
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
