@@ -115,14 +115,20 @@ def combined_line(output_dir,
     :param max_chars_count:
     :return:
     """
-    random.seed(42)
+    random.seed(time.time())
     new_lines = []
     for line in lines:
         while True:
             line = line.replace(' ', '').replace('\r', '').replace('\n', '').replace('\t', '')
             count = random.randint(min_chars_count, max_chars_count)
             if len(line) > count:
-                new_lines.append(line[0:count])
+                new_line = line[0:count]
+                if count < 9 and count >= 2 and random.randint(0, 4) % 3 == 0:
+                    insert_poz = random.randint(0, count - 1)
+                    new_line = new_line[insert_poz] + ' ' * random.randint(0, 2) + new_line[insert_poz+1:]
+
+                new_lines.append(new_line)
+                print(new_line)
                 line = line[count:]
             else:
                 break
