@@ -94,6 +94,7 @@ class FakeTextDataGenerator(object):
         last_text_right = 10
         last_text_top = 10
         label_lines = ''
+        label_ctpn_lines = ''
         for text_index, text in enumerate(text_list):
             text.replace(',', '，')
             _size = size + rnd.randint(0, 7)
@@ -174,7 +175,6 @@ class FakeTextDataGenerator(object):
                 resized_img = resized_img.filter(gaussian_filter)
 
 
-
             text_width, text_height = resized_img.size
 
             text_left, text_top = cls.generate_position(last_text_right, last_text_top,
@@ -185,6 +185,9 @@ class FakeTextDataGenerator(object):
                 break
                 
             label_lines += cls.generate_label(text_left, text_top, text_width, text_height, text, background_img, blur_filter)
+            label_ctpn_lines += cls.generate_ctpn_label(text_left, text_top, text_width, text_height)
+
+
             background_img.paste(resized_img, (text_left, text_top), resized_img)
             last_text_right = text_left + text_width
             last_text_top = text_top
@@ -200,6 +203,7 @@ class FakeTextDataGenerator(object):
         #####################################
         image_name = "img_{}.{}".format(str(index+1000), extension)
         label_name = "gt_img_{}.{}".format(str(index+1000), 'txt')
+        label_ctpn_name = "img_{}.{}".format(str(index+1000), 'txt')
         # Save the image
 
         images_dir = os.path.join(out_dir, 'ch4_training_images')
@@ -207,6 +211,12 @@ class FakeTextDataGenerator(object):
 
         with open(os.path.join(labels_dir, label_name), "w", encoding='utf-8') as f:
             f.write(label_lines)
+
+        with open(os.path.join(images_dir, label_ctpn_name), "w", encoding='utf-8') as f:
+            f.write(label_ctpn_lines)
+
+
+
 
         background_img.convert("RGB").save(os.path.join(images_dir, image_name))
 
@@ -260,4 +270,27 @@ class FakeTextDataGenerator(object):
             draw.line((x_4, y_4, x_1, y_1), 'cyan')
 
         return line
+
+
+
+    @classmethod
+    def generate_ctpn_label(cls, left, top, text_width, text_height):
+        """
+        CTPN 模型需要的训练数据
+        x_min, y_min, x_max, y_max
+        208,274,223,300
+        48,223,63,265
+        112,245,127,282
+
+        :param left:
+        :param top:
+        :param text_width:
+        :param text_height:
+        :return:
+        """
+
+
+        ctpn_line = '{},{},{},{}\n'.format(left, top, left + text_width, top + text_height)
+
+        return ctpn_line
 
