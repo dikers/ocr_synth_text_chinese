@@ -185,7 +185,8 @@ class FakeTextDataGenerator(object):
                 break
                 
             label_lines += cls.generate_label(text_left, text_top, text_width, text_height, text, background_img, blur_filter)
-            label_ctpn_lines += cls.generate_ctpn_label(text_left, text_top, text_width, text_height)
+            if not blur_filter:
+                label_ctpn_lines += cls.generate_ctpn_label(text_left, text_top, text_width, text_height)
 
 
             background_img.paste(resized_img, (text_left, text_top), resized_img)
